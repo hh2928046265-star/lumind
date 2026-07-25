@@ -3,10 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Creator OS</title>
+    <title>知光创序 / Lumind</title>
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      window.__DEBUG_ERRORS = [];
+      window.onerror = function(msg, src, line, col, err) {
+        window.__DEBUG_ERRORS.push({msg, src, line, col, stack: err ? err.stack : ''});
+        var root = document.getElementById('root');
+        if (root) {
+          root.innerHTML = '<div style=\"padding:20px;font-family:monospace;color:#e74c3c;background:#fff;min-height:100vh\"><h2 style=\"margin-bottom:10px\">⚠ JS 运行时错误</h2><pre style=\"white-space:pre-wrap;word-break:break-all;font-size:13px;line-height:1.6\">' +
+            msg + '\n\n文件: ' + src + '\n行: ' + line + ', 列: ' + col + '\n\n' + (err ? err.stack : '') +
+            '</pre></div>';
+        }
+        return false;
+      };
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -54,7 +54,7 @@ function NewWorkspaceForm({ onCreated }: { onCreated: (id: string) => void }) {
             <PenLine size={20} className="text-ink" />
           </div>
           <h1 className="font-serif text-[36px] md:text-[42px] font-semibold text-ink tracking-tight mb-3">新建创作空间</h1>
-          <p className="text-sm text-ink-muted leading-relaxed">一个 Workspace 对应一个主题。在里面创建 Canvas 画布、生成草稿。</p>
+          <p className="text-sm text-ink-muted leading-relaxed">一个 Workspace 对应一个主题。在里面创建 Canvas 画布、生成作品。</p>
         </div>
 
         <div className="flex flex-col gap-6">
@@ -216,7 +216,7 @@ function WorkspaceCanvas({ workspaceId }: { workspaceId: string }) {
                 : "text-ink-muted hover:text-ink bg-cream border border-cream-light hover:border-ink/15"}`}
           >
             <FileText size={13} />
-            草稿
+            作品
             {showDrafts ? <PanelRightClose size={13} /> : <PanelRightOpen size={13} />}
           </button>
         </div>

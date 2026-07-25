@@ -21,7 +21,7 @@ export function NotificationBell() {
   const loadNotifications = () => {
     api.getNotifications()
       .then((data) => {
-        const d = data as { items: Notification[]; unreadCount: number }
+        const d = data as any as { items: Notification[]; unreadCount: number }
         setNotifications(d.items)
         setUnreadCount(d.unreadCount)
       })

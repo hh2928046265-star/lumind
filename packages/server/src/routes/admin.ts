@@ -31,7 +31,7 @@ adminRoutes.get("/export", async (c) => {
   const json = JSON.stringify(exportData, null, 2)
 
   c.header("Content-Type", "application/json")
-  c.header("Content-Disposition", `attachment; filename="ai-creator-os-export-${new Date().toISOString().slice(0, 10)}.json"`)
+  c.header("Content-Disposition", `attachment; filename="lumind-export-${new Date().toISOString().slice(0, 10)}.json"`)
   return c.body(json)
 })
 

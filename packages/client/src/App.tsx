@@ -1,6 +1,9 @@
+﻿import { useState, useEffect } from "react";
 import { useInViewAnimation } from "./hooks/useInViewAnimation"
 import { Link } from "react-router-dom"
-import { Sparkles, PenLine, Layers, Network, ArrowRight, Brain, Zap, Star, Lightbulb } from "lucide-react"
+import { Sparkles, PenLine, Layers, Network, ArrowRight, Brain, Zap, Star, Lightbulb, Library, Home, Clock } from "lucide-react"
+import { LearnContent } from "./pages/LearnPage";
+import { HistoryPanel } from "./components/HistoryPanel";
 
 const fadeDelay = (s: number) => ({ animationDelay: s + "s" } as React.CSSProperties)
 
@@ -14,10 +17,84 @@ function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 }
 
 export default function App() {
+  const [page, setPage] = useState<"home" | "learn">("home");
+  const [showHistory, setShowHistory] = useState(false);
+
+  const openHistory = () => { setShowHistory(true); };
+
+  if (page === "learn") {
+    return (
+      <div style={{ minHeight: "100vh", background: "#F8FAFB" }}>
+        <div style={{ background: "#fff", borderBottom: "1px solid #E8EDF2", padding: "12px 24px" }}>
+          <div style={{ maxWidth: "960px", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <button onClick={() => setPage("home")} style={{
+                display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 18px",
+                borderRadius: 99, border: "1px solid #E0EBF0", background: "#fff",
+                color: "#5B6E76", fontSize: 13, cursor: "pointer", transition: "all 0.15s"
+              }}>
+                <ArrowRight size={14} style={{ transform: "rotate(180deg)" }} /> 返回创作中心
+              </button>
+              <div style={{ width: 1, height: 20, background: "#E0EBF0" }} />
+              <span style={{ fontFamily: "'PP Mondwest', Georgia, serif", fontSize: 18, fontWeight: 600, color: "#051A24" }}>学习中心</span>
+            </div>
+            <Link to="/settings" style={{ fontSize: 13, color: "#8E9BAE", textDecoration: "none" }}>设置</Link>
+          </div>
+        </div>
+        <div style={{ maxWidth: "960px", margin: "0 auto", padding: "32px 24px" }}>
+          <LearnContent />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ minHeight: "100vh", overflowX: "hidden" }}>
-
-      {/* ===== HERO ===== */}
+      {/* ===== 顶部导航条 ===== */}
+      <div style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
+        padding: "10px 24px", background: "rgba(255,255,255,0.85)",
+        backdropFilter: "blur(20px)", borderBottom: "1px solid #E0EBF0"
+      }}>
+        <div style={{ maxWidth: "960px", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <span style={{ fontFamily: "'PP Mondwest', Georgia, serif", fontSize: 22, fontWeight: 600, color: "#051A24" }}>A</span>
+            <div style={{ display: "flex", gap: 4, background: "#F0F3F6", padding: 4, borderRadius: 99 }}>
+              <button onClick={() => setPage("home")} style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "8px 18px", borderRadius: 99, border: "none",
+                background: "#fff", color: "#2C3E50", fontSize: 13, fontWeight: 500,
+                cursor: "pointer", boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+                transition: "all 0.15s"
+              }}>
+                <Home size={14} /> 创作中心
+              </button>
+              <button onClick={() => setPage("learn")} style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "8px 18px", borderRadius: 99, border: "none",
+                background: "transparent", color: "#8E9BAE", fontSize: 13,
+                cursor: "pointer", transition: "all 0.15s"
+              }}>
+                <Library size={14} /> 学习中心
+              </button>
+              <div style={{ width: 1, height: 20, background: "#E0EBF0", alignSelf: "center" }} />
+              <button onClick={openHistory} style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "8px 18px", borderRadius: 99, border: "none",
+                background: "transparent", color: "#8E9BAE", fontSize: 13,
+                cursor: "pointer", transition: "all 0.15s"
+              }}>
+                <Clock size={14} /> 历史作品
+              </button>
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <Link to="/identity" style={{ fontSize: 13, color: "#8E9BAE", textDecoration: "none" }}>身份</Link>
+            <Link to="/settings" style={{ fontSize: 13, color: "#8E9BAE", textDecoration: "none" }}>设置</Link>
+          </div>
+        </div>
+      </div>
+{/* ===== HERO ===== */}
       <section style={{
         position: "relative", minHeight: "100vh", display: "flex",
         alignItems: "center", justifyContent: "center", padding: "0 24px", overflow: "hidden",
@@ -35,7 +112,7 @@ export default function App() {
               letterSpacing: "0.18em", color: "#5B6E76"
             }}>
               <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#6c5ce7" }} />
-              AI CREATOR OS
+              知光创序
             </div>
           </FadeIn>
 
@@ -204,7 +281,7 @@ export default function App() {
           </p>
         </FadeIn>
         <FadeIn delay={0.3}>
-          <p style={{ fontSize: 15, color: "#B8CDD5", fontStyle: "italic", marginBottom: 40 }}>— AI Creator OS</p>
+          <p style={{ fontSize: 15, color: "#B8CDD5", fontStyle: "italic", marginBottom: 40 }}>— 知光创序 / Lumind</p>
         </FadeIn>
         <FadeIn delay={0.4}>
           <Link to="/workspace/new" style={{
@@ -222,7 +299,7 @@ export default function App() {
       <footer style={{ borderTop: "1px solid #E0EBF0", background: "#F6FCFF" }}>
         <div style={{ maxWidth: 960, margin: "0 auto", padding: "64px 24px", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 40 }}>
           <div>
-            <p style={{ fontFamily: "'PP Mondwest', Georgia, serif", fontSize: 21, fontWeight: 600, color: "#051A24", marginBottom: 8 }}>AI Creator OS</p>
+            <p style={{ fontFamily: "'PP Mondwest', Georgia, serif", fontSize: 21, fontWeight: 600, color: "#051A24", marginBottom: 8 }}>知光创序 / Lumind</p>
             <p style={{ fontSize: 13, color: "#5B6E76", maxWidth: 240, lineHeight: 1.6 }}>本地优先 · 开源 · 你的第二大脑<br />AI 驱动的创作操作系统</p>
           </div>
           <div style={{ display: "flex", gap: 64 }}>
@@ -244,7 +321,7 @@ export default function App() {
           </div>
         </div>
         <div style={{ maxWidth: 960, margin: "0 auto", padding: "16px 24px", borderTop: "1px solid #E0EBF0", display: "flex", justifyContent: "space-between", fontSize: 10, fontFamily: "monospace", color: "#B8CDD5" }}>
-          <span>© AI Creator OS</span>
+          <span>© 知光创序 / Lumind</span>
           <span>数据本地存储 · 隐私无忧</span>
         </div>
       </footer>
@@ -256,7 +333,11 @@ export default function App() {
           <div style={{ width: 1, height: 22, background: "#E0EBF0" }} />
           <Link to="/workspace/new" style={{ padding: "10px 28px", borderRadius: 99, textDecoration: "none", background: "#051A24", color: "#ffffff", fontSize: 14, fontWeight: 500 }}>开始创作</Link>
         </div>
-      </div>
+    </div>
+
+      {/* 历史作品浮层 */}
+      <HistoryPanel show={showHistory} onClose={() => setShowHistory(false)} />
+
     </div>
   )
 }

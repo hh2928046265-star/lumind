@@ -3,7 +3,6 @@ import {
   ReactFlow,
   Background,
   Controls,
-  MiniMap,
   useNodesState,
   useEdgesState,
   addEdge,
@@ -134,19 +133,6 @@ export function CanvasView({ workspaceId, initialNodes, initialEdges, onDraftCre
         <Controls
           className="!rounded-xl !border !border-cream-light !shadow-sm !bg-white/90 !backdrop-blur-sm"
           style={{ borderRadius: "12px" }}
-        />
-        <MiniMap
-          nodeColor={(node) => {
-            switch (node.type) {
-              case "idea": return "#6c5ce7"
-              case "quote": return "#f39c12"
-              case "question": return "#e74c3c"
-              default: return "#666"
-            }
-          }}
-          maskColor="rgba(5,26,36,0.06)"
-          style={{ background: "white", border: "1px solid #E0EBF0", borderRadius: "12px" }}
-          className="!rounded-xl !border !border-cream-light !shadow-sm"
         />
       </ReactFlow>
     </div>

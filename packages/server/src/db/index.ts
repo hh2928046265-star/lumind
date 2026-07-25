@@ -111,7 +111,14 @@ export const store = {
   memorySnapshots: new Collection<import('./types').MemorySnapshotRecord>('memory_snapshots'),
   agentCalls: new Collection<import('./types').AgentCallRecord>('agent_calls'),
   systemConfig: new Collection<import('./types').SystemConfigRecord>('system_config'),
+
+  knowledgeBases: new Collection('knowledge_bases'),
+  sources: new Collection('sources'),
+  concepts: new Collection('concepts'),
+  exams: new Collection('exams'),
+  questionBank: new Collection('question_bank'),
   notifications: new Collection<import('./types').NotificationRecord>('notifications'),
 }
 
 export { uuidv7 }
+

@@ -5,6 +5,7 @@ import { Lightbulb, HelpCircle, FileText, Sparkles, Zap } from "lucide-react"
 interface IdeaNodeData {
   content: string
   isNew?: boolean
+  type?: string
 }
 
 const typeConfig: Record<string, { icon: typeof Lightbulb; label: string; color: string; bg: string }> = {

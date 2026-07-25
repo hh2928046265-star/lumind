@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { FileText, Trash2, Loader2, ChevronRight, Clock, Edit3, MessageSquare, ThumbsUp, ThumbsDown, Send, X, GitBranch } from "lucide-react"
+import { FileText, Trash2, Loader2, ChevronRight, Clock, Edit3, MessageSquare, ThumbsUp, ThumbsDown, Send, X, GitBranch, Copy, Check } from "lucide-react"
 import { api } from "../../hooks/api"
 
 interface DraftSummary {
@@ -43,8 +43,15 @@ export function DraftPanel({ workspaceId, activeDraftId, onSelectDraft, onClose 
   const [intentMatch, setIntentMatch] = useState("")
   const [timeFeeling, setTimeFeeling] = useState("")
   const [improvementNote, setImprovementNote] = useState("")
-  const [submittingReview, setSubmittingReview] = useState(false)
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [copied, setCopied] = useState(false)
   const [reviewSubmitted, setReviewSubmitted] = useState(false)
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(draftContent);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
 
   const loadDrafts = () => {
     setLoading(true)
@@ -121,7 +128,7 @@ export function DraftPanel({ workspaceId, activeDraftId, onSelectDraft, onClose 
           <div className="w-7 h-7 rounded-lg bg-ink flex items-center justify-center">
             <FileText size={13} className="text-white" />
           </div>
-          <span className="text-sm font-medium text-ink">草稿</span>
+          <span className="text-sm font-medium text-ink">作品</span>
           {drafts.length > 0 && (
             <span className="text-[10px] font-medium text-ink-muted bg-cream rounded-full px-2 py-0.5">{drafts.length}</span>
           )}
@@ -140,7 +147,7 @@ export function DraftPanel({ workspaceId, activeDraftId, onSelectDraft, onClose 
         ) : drafts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-6 text-center">
             <div className="w-12 h-12 rounded-2xl bg-cream flex items-center justify-center mb-4"><FileText size={20} className="text-ink-muted/40" /></div>
-            <p className="text-xs text-ink-muted mb-1">还没有草稿</p>
+            <p className="text-xs text-ink-muted mb-1">还没有作品</p>
             <p className="text-[10px] text-ink-muted/40">生成的文案会出现在这里</p>
           </div>
         ) : viewingId ? (
@@ -174,6 +181,11 @@ export function DraftPanel({ workspaceId, activeDraftId, onSelectDraft, onClose 
                       className={"p-1.5 rounded-lg transition-all " + (showReview ? "bg-amber-50 text-amber-500" : "text-ink-muted/40 hover:text-ink-muted hover:bg-cream")}
                       title="评价">
                       <MessageSquare size={13} />
+                    </button>
+                    <button onClick={handleCopy}
+                      className={"p-1.5 rounded-lg transition-all " + (copied ? "bg-green-50 text-green-500" : "text-ink-muted/40 hover:text-ink-muted hover:bg-cream")}
+                      title={copied ? "已复制" : "复制"}>
+                      {copied ? <Check size={13} /> : <Copy size={13} />}
                     </button>
                     <button onClick={() => deleteDraft(viewingId)}
                       className="p-1.5 rounded-lg text-ink-muted/40 hover:text-red-400 hover:bg-red-50 transition-all" title="删除">

@@ -203,3 +203,87 @@ export interface NotificationRecord {
   read: number
   createdAt: string
 }
+
+
+// ===== 知识库 =====
+
+export interface KnowledgeBaseRecord {
+  id: string
+  userId: string
+  name: string
+  description: string
+  icon: string           // emoji
+  color: string           // tailwind color class
+  sourceCount: number
+  conceptCount: number
+  createdAt: string
+  updatedAt: string
+}
+
+// ===== 学习模块 =====
+
+export interface SourceRecord {
+  knowledgeBaseId: string
+  id: string
+  userId: string
+  title: string
+  type: string           // "text" | "url" | "pdf"
+  rawContent: string
+  summary: string
+  conceptIds: string     // JSON array
+  createdAt: string
+}
+
+export interface ConceptRecord {
+  knowledgeBaseId: string
+  id: string
+  sourceIds: string      // JSON array (一个概念可来自多份资料)
+  title: string
+  content: string
+  category: string
+  mastery: number        // 0.0-1.0 掌握度
+  lastReviewedAt: string
+  nextReviewAt: string
+  examCount: number
+  correctCount: number
+  memoryNodeId: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ExamRecord {
+  knowledgeBaseId: string
+  id: string
+  userId: string
+  title: string
+  conceptIds: string     // JSON array
+  difficulty: string     // "easy" | "hard" | "perfect"
+  passThreshold: number  // 60 | 90 | 100
+  passed: boolean
+  questions: string      // JSON: QuestionItem[]
+  answers: string        // JSON: 用户答案
+  score: number          // 0-100
+  feedback: string       // AI 批改全文
+  status: string         // "pending" | "completed" | "reviewed"
+  createdAt: string
+  completedAt: string
+}
+
+export interface QuestionBankRecord {
+  id: string
+  conceptId: string
+  conceptTitle: string
+  type: string           // "choice" | "fill" | "short_answer"
+  difficulty: string     // "easy" | "hard" | "perfect"
+  stem: string
+  options: string        // JSON | ""
+  correctAnswer: string
+  keyPoints: string       // JSON | ""
+  explanation: string
+  wrongCount: number`r`n  consecutiveCorrect: number`r`n  usageCount: number
+  lastUsedAt: string
+  createdAt: string
+}
+
+
+

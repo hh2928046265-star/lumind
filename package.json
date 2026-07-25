@@ -1,11 +1,11 @@
 {
-  "name": "ai-creator-os",
+  "name": "lumind",
   "private": true,
   "version": "0.1.0",
   "scripts": {
     "dev": "pnpm --parallel -r run dev",
-    "dev:client": "pnpm --filter @ai-creator/client dev",
-    "dev:server": "pnpm --filter @ai-creator/server dev",
+    "dev:client": "pnpm --filter @lumind/client dev",
+    "dev:server": "pnpm --filter @lumind/server dev",
     "build": "pnpm -r run build",
     "typecheck": "pnpm -r run typecheck"
   },

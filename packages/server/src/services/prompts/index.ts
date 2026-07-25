@@ -145,12 +145,12 @@ export function getStagePrompt(stage: PipelineStage, format?: CopyFormat, topic?
         "根据对画面的氛围感受，生成6个配文灵感卡片。",
         "",
         "风格要求：",
-        "- 纯情绪、氛围、意象",
+        "- 具体落点的情绪感受，不写抽象漂浮的意象",
         "- 10-20字，有网感，有记忆点",
-        "- 参考：风经过的时候世界安静了三秒 | 被光偏爱的那一秒 | 想把这一刻存档 | 今天的颜色刚刚好",
+        "- 参考：阳光刚好打在旧书桌上 | 黄昏的光让所有人都变温柔了 | 那一刻觉得时间可以停下来 | 原来蓝色可以这么深",
         "- 中文编号列表输出。不要解释。",
       ].join("\n"),
-      temperature: 0.9,
+      temperature: 0.7,
       maxTokens: 500,
     },
 
@@ -164,10 +164,10 @@ export function getStagePrompt(stage: PipelineStage, format?: CopyFormat, topic?
         "你是小红书/抖音风格的高级感文案写手。",
         "根据主题发散6个配文灵感卡片。",
         "",
-        "要求：纯情绪和氛围，10-20字，有网感，中文编号列表。不要任何解释。",
-        "风格参考：被光偏爱的那一秒 | 整个春天都藏在这了 | 橘子海 | 温柔到犯规 | 风一吹什么都变轻了",
+        "要求：写一个具体的情感落点，不是一个抽象的感受。10-20字，有网感，中文编号列表。不要任何解释。",
+        "风格参考：阳光刚好打在旧书桌上 | 黄昏的光让所有人都变温柔了 | 那一刻觉得时间可以停下来 | 原来蓝色可以这么深",
       ].join("\n"),
-      temperature: 0.9,
+      temperature: 0.7,
       maxTokens: 500,
     },
 
@@ -301,3 +301,4 @@ export function buildCardsUserMessage(source: "photo" | "topic", content: string
 export function buildTitlesUserMessage(analysis: string, topic?: string): string {
   return (topic ? "摄影主题：" + topic + "\n\n" : "") + "根据以下画面描述，起6个中文标题：\n\n" + analysis.slice(0, 2000)
 }
+

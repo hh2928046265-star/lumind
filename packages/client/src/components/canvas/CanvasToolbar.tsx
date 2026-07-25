@@ -86,8 +86,8 @@ export function CanvasToolbar({ workspaceId, onDraftCreated, onCardsCreated, onI
     } catch (err) { setStage("error"); setError((err as Error).message || "生成失败") }
   }
 
-  const isLoading = stage === "uploading" || stage === "analyzing" || stage === "generating"
-  const loadingText = stage === "uploading" ? "上传分析中..." : stage === "analyzing" ? "AI 发散卡片中..." : stage === "generating" ? "正在生成文案..." : ""
+  const isLoading = stage === "uploading" || stage === "analyzing" || (stage as string) === "generating"
+  const loadingText = stage === "uploading" ? "上传分析中..." : stage === "analyzing" ? "AI 发散卡片中..." : (stage as string) === "generating" ? "正在生成文案..." : ""
 
   return (
     <div className="relative flex items-center gap-2 flex-wrap z-50">
@@ -188,21 +188,21 @@ export function CanvasToolbar({ workspaceId, onDraftCreated, onCardsCreated, onI
             ))}
           </div>
           <div className="flex gap-2 mb-2">
-            <button onClick={() => handleGenerate("short")} disabled={!selectedCard || stage === "generating"}
+            <button onClick={() => handleGenerate("short")} disabled={!selectedCard || (stage as string) === "generating"}
               className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm font-medium disabled:opacity-40 flex items-center justify-center gap-1.5">
-              {stage === "generating" ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}短文
+              {(stage as string) === "generating" ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}短文
             </button>
-            <button onClick={() => handleGenerate("essay")} disabled={!selectedCard || stage === "generating"}
+            <button onClick={() => handleGenerate("essay")} disabled={!selectedCard || (stage as string) === "generating"}
               className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium disabled:opacity-40 flex items-center justify-center gap-1.5">
-              {stage === "generating" ? <Loader2 size={14} className="animate-spin" /> : <Wand2 size={14} />}随笔
+              {(stage as string) === "generating" ? <Loader2 size={14} className="animate-spin" /> : <Wand2 size={14} />}随笔
             </button>
-            <button onClick={() => handleGenerate("article")} disabled={!selectedCard || stage === "generating"}
+            <button onClick={() => handleGenerate("article")} disabled={!selectedCard || (stage as string) === "generating"}
               className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-medium disabled:opacity-40 flex items-center justify-center gap-1.5">
-              {stage === "generating" ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}文章
+              {(stage as string) === "generating" ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}文章
             </button>
           </div>
           <p className="text-[10px] text-ink-muted/50 text-center">
-            {selectedCard ? "已选方向 → 点上方按钮生成 → 文案出现在右侧草稿面板" : "选一张卡片作为方向"}
+            {selectedCard ? "已选方向 → 点上方按钮生成 → 文案出现在右侧作品面板" : "选一张卡片作为方向"}
           </p>
         </div>
       )}

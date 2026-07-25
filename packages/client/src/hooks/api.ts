@@ -1,4 +1,4 @@
-const BASE_URL = "/api"
+﻿const BASE_URL = "/api"
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
@@ -95,6 +95,15 @@ export const api = {
   createIdentity: (body: Record<string, unknown>) => request<Record<string, unknown>>("/identity/onboarding", { method: "POST", body: JSON.stringify(body) }),
   updateIdentity: (body: Record<string, unknown>) => request<Record<string, unknown>>("/identity", { method: "PATCH", body: JSON.stringify(body) }),
 
+  getGlobalDrafts: (params?: { q?: string; format?: string; page?: number; pageSize?: number }) => {
+    const sp = new URLSearchParams()
+    if (params?.q) sp.set("q", params.q)
+    if (params?.format) sp.set("format", params.format)
+    if (params?.page) sp.set("page", String(params.page))
+    if (params?.pageSize) sp.set("pageSize", String(params.pageSize))
+    const qs = sp.toString()
+    return request<{ items: Array<Record<string, unknown>>; total: number; page: number; pageSize: number }>(`/drafts${qs ? "?" + qs : ""}`)
+  },
   getDrafts: (workspaceId: string) => request<Array<Record<string, unknown>>>(`/drafts/workspace/${workspaceId}`),
   getDraft: (draftId: string) => request<Record<string, unknown>>(`/drafts/${draftId}`),
   updateDraft: (draftId: string, body: Record<string, unknown>) => request<Record<string, unknown>>(`/drafts/${draftId}`, { method: "PATCH", body: JSON.stringify(body) }),
@@ -145,3 +154,4 @@ export interface PipelineState {
   steps: Array<{ stage: string; status: string; error?: string }>
   finished: boolean
 }
+

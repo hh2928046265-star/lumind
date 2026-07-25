@@ -44,7 +44,7 @@ export function MemoryPage() {
     setLoading(true)
     api.getMemoryGraph()
       .then((data) => {
-        const d = data as { nodes: MemoryNode[]; edges: MemoryEdge[]; stats: { totalNodes: number; totalEdges: number; coreNodes: number } }
+        const d = data as any as { nodes: MemoryNode[]; edges: MemoryEdge[]; stats: { totalNodes: number; totalEdges: number; coreNodes: number } }
         setNodes(d.nodes || [])
         setEdges(d.edges || [])
         setStats(d.stats || { totalNodes: 0, totalEdges: 0, coreNodes: 0 })
@@ -61,7 +61,7 @@ export function MemoryPage() {
       return
     }
     api.searchMemory(searchQ).then((data) => {
-      setSearchResults(data as MemoryNode[])
+      setSearchResults(data as any as MemoryNode[])
     })
   }
 
@@ -76,7 +76,7 @@ export function MemoryPage() {
 
   const createSnapshot = async () => {
     try {
-      await api.createMemorySnapshot()
+      await (api as any).createMemorySnapshot()
       loadGraph()
     } catch {
       // ignore
@@ -86,7 +86,7 @@ export function MemoryPage() {
   const loadSnapshots = async () => {
     setShowSnapshots(!showSnapshots)
     if (!showSnapshots) {
-      const data = await api.getMemorySnapshots()
+      const data = await (api as any).getMemorySnapshots()
       setSnapshots(data as Snapshot[])
     }
   }
@@ -240,7 +240,7 @@ export function MemoryPage() {
                   <p className="text-xs text-ink-muted mt-1 leading-relaxed">{node.content}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="text-[10px] text-ink-muted/60">
-                      {node.sourceType === "canvas" ? "来自 Canvas" : "来自草稿"}
+                      {node.sourceType === "canvas" ? "来自 Canvas" : "来自作品"}
                     </span>
                     <span className="text-[10px] text-ink-muted/60">
                       相关性: {(node.coreScore * 100).toFixed(0)}%

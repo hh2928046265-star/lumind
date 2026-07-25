@@ -11,6 +11,8 @@ import { agentRoutes } from './routes/agent'
 import { notificationRoutes } from './routes/notification'
 import { adminRoutes } from './routes/admin'
 import { uploadRoutes } from './routes/uploads'
+import { kbRoutes } from './routes/knowledgeBase'
+import { learnRoutes } from './routes/learn'
 import { pipelineRoutes } from './routes/pipeline'
 import { serveStatic } from '@hono/node-server/serve-static'
 
@@ -77,6 +79,8 @@ api.route('/agents', agentRoutes)
 api.route('/notifications', notificationRoutes)
 api.route('/admin', adminRoutes)
 api.route('/uploads', uploadRoutes)
+api.route('/kb', kbRoutes)
+api.route('/learn', learnRoutes)
 api.route('/pipeline', pipelineRoutes)
 
 app.route('/api', api)
@@ -95,3 +99,4 @@ serve({
 })
 
 export type AppType = typeof api
+

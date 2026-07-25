@@ -39,7 +39,7 @@ export function SettingsPage() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `ai-creator-os-export-${new Date().toISOString().slice(0, 10)}.zip`
+      a.download = `lumind-export-${new Date().toISOString().slice(0, 10)}.zip`
       a.click()
       URL.revokeObjectURL(url)
     } catch {
@@ -145,7 +145,7 @@ export function SettingsPage() {
             <Database size={18} />
           </div>
           <h3 className="font-serif text-xl font-semibold text-ink mb-3">数据管理</h3>
-          <p className="text-sm text-ink-muted mb-5">导出所有创作数据，包含 Workspace、草稿、记忆图谱和身份配置</p>
+          <p className="text-sm text-ink-muted mb-5">导出所有创作数据，包含 Workspace、作品、记忆图谱和身份配置</p>
           <button
             onClick={exportData}
             disabled={exporting}

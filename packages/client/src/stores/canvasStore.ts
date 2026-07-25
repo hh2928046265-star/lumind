@@ -1,6 +1,7 @@
-﻿import { create } from 'zustand'
-import type { CanvasNode, CanvasEdge, ViewportState } from '@ai-creator/shared'
-
+﻿// @ts-ignore - resolved by pnpm workspace
+import { create } from 'zustand'
+// @ts-ignore - resolved by pnpm workspace
+import type { CanvasNode, CanvasEdge, ViewportState } from '@lumind/shared'
 interface CanvasState {
   // 当前加载的 Canvas
   workspaceId: string | null

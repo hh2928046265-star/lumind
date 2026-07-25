@@ -1,8 +1,58 @@
-import { Hono } from "hono"
+﻿import { Hono } from "hono"
 import { store, uuidv7 } from "../db"
 import { notify } from "../services/notification"
 
 export const draftRoutes = new Hono()
+
+// ===== 全局历史作品列表（跨所有工作空间） =====
+draftRoutes.get("/", (c) => {
+  const q = (c.req.query("q") || "").toLowerCase()
+  const formatFilter = c.req.query("format") || ""
+  const page = parseInt(c.req.query("page") || "1")
+  const pageSize = parseInt(c.req.query("pageSize") || "20")
+
+  let drafts = store.drafts
+    .findAll(() => true)
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+
+  // 关联 workspace 标题
+  const enriched = drafts.map((d) => {
+    const ws = store.workspaces.findById(d.workspaceId)
+    return {
+      id: d.id,
+      title: d.title,
+      format: d.format,
+      content: d.content,
+      workspaceId: d.workspaceId,
+      workspaceTitle: ws?.title || "未命名空间",
+      status: d.status,
+      wordCount: d.content.length,
+      createdAt: d.createdAt,
+      updatedAt: d.updatedAt,
+    }
+  })
+
+  // 搜索过滤
+  let filtered = enriched
+  if (q) {
+    filtered = filtered.filter((d) =>
+      d.title.toLowerCase().includes(q) ||
+      d.content.toLowerCase().includes(q) ||
+      d.workspaceTitle.toLowerCase().includes(q)
+    )
+  }
+  if (formatFilter) {
+    filtered = filtered.filter((d) => d.format === formatFilter)
+  }
+
+  const total = filtered.length
+  const paged = filtered.slice((page - 1) * pageSize, page * pageSize)
+
+  return c.json({
+    success: true,
+    data: { items: paged, total, page, pageSize },
+  })
+})
 
 draftRoutes.get("/workspace/:workspaceId", (c) => {
   const workspaceId = c.req.param("workspaceId")
@@ -26,7 +76,7 @@ draftRoutes.get("/workspace/:workspaceId", (c) => {
 draftRoutes.get("/:draftId", (c) => {
   const draftId = c.req.param("draftId")
   const draft = store.drafts.findById(draftId)
-  if (!draft) return c.json({ success: false, error: "草稿不存在" }, 404)
+  if (!draft) return c.json({ success: false, error: "作品不存在" }, 404)
   const versions = store.draftVersions.findAll((v) => v.draftId === draftId).sort((a, b) => b.versionNumber - a.versionNumber)
   let reviewCard = null
   if (draft.reviewCardId) {
@@ -41,7 +91,7 @@ draftRoutes.patch("/:draftId", async (c) => {
   const body = await c.req.json()
   const now = new Date().toISOString()
   const existing = store.drafts.findById(draftId)
-  if (!existing) return c.json({ success: false, error: "草稿不存在" }, 404)
+  if (!existing) return c.json({ success: false, error: "作品不存在" }, 404)
   if (body.content !== undefined && body.content !== existing.content) {
     const versions = store.draftVersions.findAll((v) => v.draftId === draftId)
     const nextVersion = versions.length > 0 ? Math.max(...versions.map((v) => v.versionNumber)) + 1 : 2
@@ -70,7 +120,7 @@ draftRoutes.post("/:draftId/review", async (c) => {
   const body = await c.req.json()
   const now = new Date().toISOString()
   const draft = store.drafts.findById(draftId)
-  if (!draft) return c.json({ success: false, error: "草稿不存在" }, 404)
+  if (!draft) return c.json({ success: false, error: "作品不存在" }, 404)
 
   let reviewId = draft.reviewCardId
   if (reviewId && store.reviewCards.findById(reviewId)) {
