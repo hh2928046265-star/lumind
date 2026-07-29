@@ -41,10 +41,30 @@ export function LearnContent() {
       {showDeleteKb && <DeleteKbModal kbName={activeKb?.name||""} kbId={activeKbId} onClose={() => setShowDeleteKb(false)} onDeleted={() => { setActiveKbId(""); setShowDeleteKb(false); loadKbs(); }} />}
 
       {!activeKbId ? (
-        <div className="text-center py-20">
-          <div className="w-16 h-16 rounded-2xl bg-[#F0F3F6] flex items-center justify-center mx-auto mb-4"><Library size={28} className="text-[#B8C5D0]"/></div>
-          <p className="text-sm text-[#8E9BAE] mb-4">选择或创建一个知识库开始</p>
-          <button onClick={() => setShowNewKb(true)} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#6C5CE7] text-white text-sm font-medium hover:bg-[#5A4BD1]"><Plus size={16}/>新建知识库</button>
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold text-[#2C3E50]">我的知识库 ({kbs.length})</h3>
+            <button onClick={() => setShowNewKb(true)} className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-[#6C5CE7] text-white hover:bg-[#5A4BD1]"><Plus size={14}/>新建</button>
+          </div>
+          {kbs.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="w-16 h-16 rounded-2xl bg-[#F0F3F6] flex items-center justify-center mx-auto mb-4"><Library size={28} className="text-[#B8C5D0]"/></div>
+              <p className="text-sm text-[#8E9BAE]">还没有知识库，创建一个开始吧</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {kbs.map(kb => (
+                <button key={kb.id} onClick={() => setActiveKbId(kb.id)} className="text-left p-4 rounded-2xl bg-white border border-[#E8EDF2] hover:border-[#6C5CE7]/30 hover:shadow-sm transition-all group">
+                  <div className="text-2xl mb-2">{kb.icon}</div>
+                  <div className="text-sm font-medium text-[#2C3E50] truncate">{kb.name}</div>
+                  <div className="flex items-center gap-3 mt-2 text-xs text-[#8E9BAE]">
+                    <span>{kb.sourceCount} 资料</span>
+                    <span>{kb.conceptCount} 知识点</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       ) : (
         <>
