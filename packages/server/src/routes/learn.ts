@@ -50,9 +50,50 @@ learnRoutes.post("/upload", async (c) => {
     text = buffer.toString("utf-8")
   } else if (ext === ".pdf") {
     try {
-      const pdfParse = (await import("pdf-parse")).default
-      const data = await pdfParse(buffer)
-      text = data.text || ""
+      const { PDFParse } = await import("pdf-parse")
+      const parser = new PDFParse({ data: buffer })
+      const result = await parser.getText({ pageJoiner: "" })
+      text = (result.text || "").replace(/--\s*\d+\s*of\s*\d+\s*--/g, "").trim()
+      
+      // If text extraction returns empty/minimal (scanned PDF), use OCR via Ollama vision
+      if (text.length < 30) {
+        console.log("[Learn] PDF text extraction empty, falling back to OCR (page count:", result.total, ")")
+        const ocrTexts: string[] = []
+        const maxPages = Math.min(result.total, 50) // Limit to 50 pages for performance
+        for (let p = 1; p <= maxPages; p++) {
+          try {
+            const screenshot = await parser.getScreenshot({ partial: [p], scale: 1.5 })
+            if (screenshot.pages?.[0]?.dataUrl) {
+              const b64 = screenshot.pages[0].dataUrl.split(",")[1]
+              if (b64) {
+                const ocrResp = await fetch("http://localhost:11434/api/chat", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    model: "minicpm-v:8b",
+                    messages: [
+                      { role: "system", content: "你是一个OCR文字识别工具。准确识别图片中所有文字，原样输出，不要解释。保持格式和换行。" },
+                      { role: "user", content: "识别文字", images: [b64] }
+                    ],
+                    stream: false
+                  }),
+                  signal: AbortSignal.timeout(30000)
+                })
+                const ocrData = await ocrResp.json() as any
+                if (ocrData.message?.content) {
+                  ocrTexts.push(ocrData.message.content)
+                }
+              }
+            }
+          } catch (e: any) {
+            console.warn("[Learn] OCR page", p, "failed:", e.message?.slice(0, 60))
+          }
+        }
+        text = ocrTexts.join("\n\n")
+        if (result.total > maxPages) {
+          text += "\n\n[注意：已识别前" + maxPages + "页，共" + result.total + "页]"
+        }
+      }
     } catch (e: any) {
       return c.json({ success: false, error: "PDF 解析失败: " + (e.message || "未知错误") }, 400)
     }
@@ -98,7 +139,7 @@ learnRoutes.post("/upload", async (c) => {
     success: true,
     data: {
       sourceId, title: file.name, type: ext.replace(".", ""),
-      summary, charCount: text.length
+      summary, rawContent: text.slice(0, 50000), charCount: text.length
     }
   })
 })
